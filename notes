@@ -1,0 +1,109 @@
+Links
+    - Good tutorial: http://alignedleft.com/tutorials/d3/fundamental
+    - Another good tutorial: http://christopheviau.com/d3_tutorial/
+    - API reference: https://github.com/mbostock/d3/wiki/API-Reference
+
+- D3.js 
+    - All about mapping visuals and data together.
+    - Visuals are DOM and CSS rendered by browser
+    - D3.js provides the magic glue.
+
+    - Show game: http://vax.herokuapp.com/game
+
+step1.html
+
+- Selections
+
+    d3.select("body").append("p").text("hello world");
+
+    d3.select("body").append("p").text("hello world 2");
+
+    d3.select("body").append("p").text("hello world 3");
+
+    - Show DOM inspector
+
+
+- Properties
+
+    d3.selectAll("p").style("color", "blue");
+
+    - Can use any W3 selectors
+
+- Dynamic properties
+
+    d3.selectAll("p").style("color", function() { return "#0f0"; });
+    d3.selectAll("p").style("font-size", function(_, i) { return 10+i*10+"px"; });
+
+- Binding data
+
+    d3.selectAll("p").data([30,20,10]).style("font-size", function(d, i) { return d+"px"; });
+
+--- reload page ---
+
+- Have data, but no DOM elements yet?
+
+    var dataset = [1, 2, 3, 5, 8, 13, 21];
+
+    d3.select("body").selectAll("p").data(dataset).enter().append("p").text("hello world");
+
+- Add new data, update the visualization:
+
+    dataset.push(34);
+
+    d3.select("body").selectAll("p").data(dataset).enter().append("p").text("hello world");
+
+
+- Change rendering of existing nodes:
+    - update is the default, just remove the enter().append("p")
+
+    d3.select("body").selectAll("p").data(dataset).text(function(d) { return "hello " + d});
+
+- Change data and update rendering of nodes:
+
+    dataset[0] = 100;
+
+    d3.select("body").selectAll("p").data(dataset).text(function(d) { return "hello " + d});
+
+
+- Remove data and update rendering of nodes:
+
+    d3.select("body").selectAll("p").data(dataset).exit().remove();
+
+    dataset.pop();
+
+    d3.select("body").selectAll("p").data(dataset).exit().remove();
+
+----------------------
+
+step2.html
+
+    - CSS to define appearance of "bar" divs
+
+    var dataset = [1, 3, 2, 5, 7];
+
+    d3.select("body").selectAll("div").data(dataset).enter().append("div").attr("class", "bar").style("height", function(d) { return 10*d+"px"; });
+
+
+--- reload page ---
+
+- Now some "real" data:
+
+    d3.csv("https://s3.amazonaws.com/d3_demo/cereal.csv", function(error, data) { cereal = data; })
+    - note, most I/O in Javascript is async, so callbacks are common.
+      I'm cheating here for simplicity.
+
+    cereal.length
+
+    cereal[0];
+
+    cereal[0].Calories;
+
+    var cals = cereal.map(function(d) { return d.Calories });
+
+    d3.select("body").selectAll("div").data(cals).enter().append("div").attr("class", "bar").style("height", function(d) { return d+"px"; });
+
+
+------------------
+
+step3.html
+
